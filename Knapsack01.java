@@ -1,23 +1,16 @@
-import java.util.Scanner;
+import java.util.*;
 
-public class Knapsack01 {
+class Knapsack01 {
+    static int knapSack(int W, int wt[], int val[], int n) {
+        int[] dp = new int[W + 1];
 
-    public static int knapsack(int[] profits, int[] weights, int capacity) {
-        int[][] table = new int[profits.length + 1][capacity + 1];
-
-        for (int i = 0; i <= profits.length; i++) {
-            for (int j = 0; j <= capacity; j++) {
-                if (i == 0 || j == 0) {
-                    table[i][j] = 0;
-                } else if (weights[i - 1] > j) {
-                    table[i][j] = table[i - 1][j];
-                } else {
-                    table[i][j] = Math.max(table[i - 1][j], profits[i - 1] + table[i - 1][j - weights[i - 1]]);
-                }
+        for (int i = 1; i < n + 1; i++) {
+            for (int w = W; w >= 0; w--) {
+                if (wt[i - 1] <= w)
+                    dp[w] = Math.max(dp[w], dp[w - wt[i - 1]] + val[i - 1]);
             }
         }
-
-        return table[profits.length][capacity];
+        return dp[W];
     }
 
     public static void main(String[] args) {
@@ -26,21 +19,21 @@ public class Knapsack01 {
         System.out.print("Enter the number of items: ");
         int n = scanner.nextInt();
 
-        int[] profits = new int[n];
-        int[] weights = new int[n];
+        int[] profit = new int[n];
+        int[] weight = new int[n];
 
+        System.out.println("Enter the profit and weight of each item:");
         for (int i = 0; i < n; i++) {
-            System.out.print("Enter profit for item " + (i + 1) + ": ");
-            profits[i] = scanner.nextInt();
-            System.out.print("Enter weight for item " + (i + 1) + ": ");
-            weights[i] = scanner.nextInt();
+            profit[i] = scanner.nextInt();
+            weight[i] = scanner.nextInt();
         }
 
         System.out.print("Enter the knapsack capacity: ");
-        int capacity = scanner.nextInt();
+        int W = scanner.nextInt();
 
-        int maximum = knapsack(profits, weights, capacity);
+        int result = knapSack(W, weight, profit, n);
+        System.out.println("Maximum value in the knapsack: " + result);
 
-        System.out.println("The maximum profit is " + maximum);
+        scanner.close();
     }
 }
