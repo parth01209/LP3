@@ -41,25 +41,24 @@ public class NQueensWithPartialPlacement {
         return true;
     }
 
-    public static boolean solveNQueens(int[][] board, int col, int n) {
+    public static void solveNQueens(int[][] board, int col, int n) {
         if (col >= n) {
-            return true; // All queens are placed
+            // All queens are placed, print the solution
+            printBoard(board);
+            System.out.println();
+            return;
         }
 
         for (int i = 0; i < n; i++) {
             if (isSafe(board, i, col, n)) {
                 board[i][col] = 1;
 
-                if (solveNQueens(board, col + 1, n)) {
-                    return true;
-                }
+                solveNQueens(board, col + 1, n);
 
-                // If placing the queen at (i, col) doesn't lead to a solution, backtrack
+                // Backtrack
                 board[i][col] = 0;
             }
         }
-
-        return false; // No solution exists
     }
 
     public static void main(String[] args) {
@@ -68,17 +67,11 @@ public class NQueensWithPartialPlacement {
         int n = scanner.nextInt();
         
         int[][] board = new int[n][n];
-
+        
         // Initialize the board with the first queen placed in the first column (0)
         board[0][0] = 1;
         
-        boolean result = solveNQueens(board, 1, n);
-
-        if (result) {
-            System.out.println("Solution found:");
-            printBoard(board);
-        } else {
-            System.out.println("No solution exists.");
-        }
+        System.out.println("All possible solutions:");
+        solveNQueens(board, 1, n);
     }
 }
